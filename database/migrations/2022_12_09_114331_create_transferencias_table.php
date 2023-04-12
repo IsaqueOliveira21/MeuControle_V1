@@ -22,8 +22,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('conta_origem_id')->references('id')->on('contas')->onDelete('cascade');
-            $table->foreign('conta_destino_id')->references('id')->on('contas')->onDelete('cascade');
+            $table->foreign('conta_origem_id')->references('id')->on('conta')->onDelete('cascade');
+            $table->foreign('conta_destino_id')->references('id')->on('conta')->onDelete('cascade');
         });
     }
 

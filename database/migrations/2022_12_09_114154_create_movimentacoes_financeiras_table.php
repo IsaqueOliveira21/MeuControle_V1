@@ -30,7 +30,7 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('conta_id')->references('id')->on('contas')->onDelete('cascade');
+            $table->foreign('conta_id')->references('id')->on('conta')->onDelete('cascade');
             $table->foreign('amigo_id')->references('id')->on('amigos')->onDelete('cascade');
         });
     }

@@ -73,7 +73,7 @@
             <div class="content-side content-side-full text-center bg-body-light">
                 <div class="smini-hide">
                     <img class="img-avatar" src="{{ asset('assets/media/avatars/avatar10.jpg') }}" alt="">
-                    <div class="mt-3 fw-semibold">Henry Harrison</div>
+                    <div class="mt-3 fw-semibold">{{ \Illuminate\Support\Facades\Auth::user()->name }}</div>
                     <a class="link-fx text-muted" href="javascript:void(0)">$ 49.680,00</a>
                 </div>
             </div>
@@ -83,7 +83,7 @@
             <div class="content-side">
                 <ul class="nav-main">
                     <li class="nav-main-item">
-                        <a class="nav-main-link active" href="#">
+                        <a class="nav-main-link" href="{{ Route('user.dashboard') }}">
                             <i class="nav-main-link-icon fa fa-rocket"></i>
                             <span class="nav-main-link-name">Dashboard</span>
                         </a>
@@ -96,7 +96,7 @@
                         </a>
                         <ul class="nav-main-submenu">
                             <li class="nav-main-item">
-                                <a class="nav-main-link" href="#">
+                                <a class="nav-main-link" href="{{ Route('conta.index') }}">
                                     <span class="nav-main-link-name">Ver</span>
                                 </a>
                             </li>
@@ -272,7 +272,7 @@
                         <div class="bg-primary-dark rounded-top fw-semibold text-white text-center p-3">
                             <img class="img-avatar img-avatar48 img-avatar-thumb" src="{{ asset('assets/media/avatars/avatar10.jpg') }}" alt="">
                             <div class="pt-2">
-                                <a class="text-white fw-semibold" href="#">Henry Harrison</a>
+                                <a class="text-white fw-semibold" href="#">{{ \Illuminate\Support\Facades\Auth::user()->name }}</a>
                             </div>
                         </div>
                         <div class="p-2">
