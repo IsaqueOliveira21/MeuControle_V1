@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ContaController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MovimentacaoController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,12 +14,17 @@ Route::post('', [UserController::class, 'store'])->name('user.store');
 Route::get('/denied', [UserController::class, 'accessDenied'])->name('login');
 
 Route::prefix('meucontrole')->middleware('auth')->group(function () {
+    Route::get('logout', [UserController::class, 'logout'])->name('user.logout');
     Route::get('dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
 
     Route::prefix('conta')->controller(ContaController::class)->group(function () {
         Route::get('', 'index')->name('conta.index');
         Route::get('create', 'create')->name('conta.create');
         Route::post('store', 'store')->name('conta.store');
+    });
+
+    Route::prefix('movimentacoes')->controller(MovimentacaoController::class)->group(function () {
+        Route::get('', 'index')->name('movimentacoes.index');
     });
 });
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,6 +36,16 @@ class Movimentacao extends Model
         'updated_at',
     ];
 
+    public function getDataAttribute()
+    {
+        return Carbon::parse($this->attributes['data'])->format('d/m/Y');
+    }
+
+    public function setDataAttribute($value) {
+        if(!empty($value)) {
+            $this->attributes['data'] = Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
+        }
+    }
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

@@ -36,6 +36,12 @@ class UserController extends Controller
             return $e->getMessage();
         }
     }
+
+    public function logout() {
+        Auth::logout();
+        return redirect()->route('user.login');
+    }
+
     public function create() {
         return view('register');
     }
