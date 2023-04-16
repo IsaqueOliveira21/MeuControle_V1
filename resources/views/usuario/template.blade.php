@@ -74,7 +74,6 @@
                 <div class="smini-hide">
                     <img class="img-avatar" src="{{ asset('assets/media/avatars/avatar10.jpg') }}" alt="">
                     <div class="mt-3 fw-semibold">{{ \Illuminate\Support\Facades\Auth::user()->name }}</div>
-                    <a class="link-fx text-muted" href="javascript:void(0)">$ 49.680,00</a>
                 </div>
             </div>
             <!-- END Side Actions -->

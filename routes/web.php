@@ -25,7 +25,9 @@ Route::prefix('meucontrole')->middleware('auth')->group(function () {
 
     Route::prefix('movimentacoes')->controller(MovimentacaoController::class)->group(function () {
         Route::get('', 'index')->name('movimentacoes.index');
-        Route::get('detalhe', 'detalhe')->name('movimentacoes.detalhes');
+        Route::get('create', 'create')->name('movimentacoes.create');
+        Route::post('store', 'store')->name('movimentacoes.store');
+        Route::get('detalhes/{movimentacao}', 'detalhes')->name('movimentacoes.detalhes');
     });
 });
 
