@@ -5,77 +5,88 @@
 @section('conteudo')
     <div class="block block-rounded">
         <div class="block-content block-header-default">
-            <form action="{{ Route('movimentacoes.store') }}" method="POST" enctype="application/x-www-form-urlencoded">
+            <form action="{{ isset($movimentacao) ? Route('movimentacoes.update', $movimentacao->id) : Route('movimentacoes.store') }}" method="POST" enctype="application/x-www-form-urlencoded">
                 @csrf
+                @if(isset($movimentacao))
+                    @method('PUT')
+                @endif
                 <div class="row mb-4">
                     <div class="col-6">
                         <label for="conta_id" class="form-label">Conta</label>
-                        <select class="form-select" name="conta_id" id="conta_id">
+                        <select class="form-select" name="conta_id" id="conta_id" {{ (Route::currentRouteName() === 'movimentacoes.detalhes') ? 'disabled' : ''}}>
                             <option value="">SELECIONAR CONTA</option>
                             @foreach($contas as $conta)
-                                <option value="{{ $conta->id }}">{{ $conta->nome_conta }}</option>
+                                <option value="{{ $conta->id }}" {{(isset($movimentacao->conta_id) && $movimentacao->conta_id === $conta->id) ? 'selected' : ''}}>{{ $conta->nome_conta }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-6">
                         <label for="data" class="form-label">Data</label>
-                        <input type="date" class="form-control" name="data" id="data">
+                        <input type="text" class="js-datepicker form-control" id="data"
+                               value="{{$movimentacao->data ?? '' }}"
+                               name="data" data-week-start="1" data-autoclose="true"
+                               data-today-highlight="true" data-date-format="dd/mm/yyyy"
+                               placeholder="dd/mm/aaaa" autocomplete="off" {{ (Route::currentRouteName() === 'movimentacoes.detalhes') ? 'disabled' : ''}}>
                     </div>
                 </div>
                 <div class="row mb-4">
                     <div class="col-6">
                         <label for="tipo_movimentacao" class="form-label">Tipo de Movimentação</label>
-                        <select class="form-select" name="tipo_movimentacao" id="tipo_movimentacao">
-                            <option value="ENTRADA">Entrada</option>
-                            <option value="SAIDA">Saída</option>
+                        <select class="form-select" name="tipo_movimentacao" id="tipo_movimentacao" {{ (Route::currentRouteName() === 'movimentacoes.detalhes') ? 'disabled' : ''}}>
+                            <option value="ENTRADA" {{isset($movimentacao->tipo) && $movimentacao->tipo === 'ENTRADA' ? 'selected' : ''}}>Entrada</option>
+                            <option value="SAIDA" {{isset($movimentacao->tipo) && $movimentacao->tipo === 'SAIDA' ? 'selected' : ''}}>Saída</option>
                         </select>
                     </div>
                     <div class="col-6">
                         <label for="forma_pagamento" class="form-label">Forma de Pagamento</label>
-                        <select class="form-select" name="forma_pagamento" id="forma_pagamento">
-                            <option value="A VISTA">A Vista</option>
-                            <option value="DEBITO">Débito</option>
-                            <option value="CREDITO">Crédito</option>
-                            <option value="PIX">PIX</option>
-                            <option value="TRANSFERENCIA">Transferência</option>
+                        <select class="form-select" name="forma_pagamento" id="forma_pagamento" {{ (Route::currentRouteName() === 'movimentacoes.detalhes') ? 'disabled' : ''}}>
+                            <option value="A VISTA" {{isset($movimentacao->forma_pagamento) && $movimentacao->forma_pagamento === 'A VISTA' ? 'selected' : ''}}>A Vista</option>
+                            <option value="DEBITO" {{isset($movimentacao->forma_pagamento) && $movimentacao->forma_pagamento === 'DEBITO' ? 'selected' : ''}}>Débito</option>
+                            <option value="CREDITO" {{isset($movimentacao->forma_pagamento) && $movimentacao->forma_pagamento === 'CREDITO' ? 'selected' : ''}}>Crédito</option>
+                            <option value="PIX" {{isset($movimentacao->forma_pagamento) && $movimentacao->forma_pagamento === 'PIX' ? 'selected' : ''}}>PIX</option>
+                            <option value="TRANSFERENCIA" {{isset($movimentacao->forma_pagamento) && $movimentacao->forma_pagamento === 'TRANSFERENCIA' ? 'selected' : ''}}>Transferência</option>
                         </select>
                     </div>
                 </div>
                 <div class="row mb-4">
                     <div class="col-6">
                         <label for="descricao" class="form-label">Descrição</label>
-                        <input type="text" class="form-control" name="descricao" id="descricao" placeholder="Descrição">
+                        <input type="text" class="form-control" name="descricao" id="descricao" placeholder="Descrição" value="{{ $movimentacao->descricao ?? '' }}" {{ (Route::currentRouteName() === 'movimentacoes.detalhes') ? 'readonly' : ''}}>
                     </div>
                     <div class="col-6">
                         <label for="parcelado" class="form-label">Parcelado</label>
-                        <input type="number" class="form-control" name="parcelado" id="parcelado" min="0" step="1" placeholder="12x">
+                        <input type="number" class="form-control" name="parcelado" id="parcelado" min="0" step="1" placeholder="12x" value="{{ $movimentacao->parcelado ?? '' }}" {{ (Route::currentRouteName() === 'movimentacoes.detalhes') ? 'readonly' : ''}}>
                     </div>
                 </div>
                 <div class="row mb-4">
                     <div class="col-6">
                         <label for="valor_total" class="form-label">Valor Total</label>
-                        <input type="number" class="form-control" name="valor_total" id="valor_total" placeholder="R$ 100,00">
+                        <input type="number" class="form-control" name="valor_total" id="valor_total" placeholder="R$ 100,00" value="{{ $movimentacao->valor_total ?? '' }}" {{ (Route::currentRouteName() === 'movimentacoes.detalhes') ? 'readonly' : ''}}>
                     </div>
                     <div class="col-6">
                         <label for="recorrencia" class="form-label">Recorrencia</label>
-                        <select class="form-select" name="recorrencia" id="recorrencia">
-                            <option value="NAO RECORRENTE">Não Recorrente</option>
-                            <option value="DIARIO">Diário</option>
-                            <option value="SEMANAL">Semanal</option>
-                            <option value="MENSAL">Mensal</option>
-                            <option value="ANUAL">Anual</option>
+                        <select class="form-select" name="recorrencia" id="recorrencia" {{ (Route::currentRouteName() === 'movimentacoes.detalhes') ? 'disabled' : ''}}>
+                            <option value="NAO RECORRENTE" {{isset($movimentacao->recorrencia) && $movimentacao->recorrencia === 'NAO RECORRENTE' ? 'selected' : ''}}>Não Recorrente</option>
+                            <option value="DIARIO" {{isset($movimentacao->recorrencia) && $movimentacao->recorrencia === 'DIARIO' ? 'selected' : ''}}>Diário</option>
+                            <option value="SEMANAL" {{isset($movimentacao->recorrencia) && $movimentacao->recorrencia === 'SEMANAL' ? 'selected' : ''}}>Semanal</option>
+                            <option value="MENSAL" {{isset($movimentacao->recorrencia) && $movimentacao->recorrencia === 'MENSAL' ? 'selected' : ''}}>Mensal</option>
+                            <option value="ANUAL" {{ isset($movimentacao->recorrencia) && $movimentacao->recorrencia === 'ANUAL' ? 'selected' : ''}}>Anual</option>
                         </select>
                     </div>
                 </div>
                 <div class="row mb-4">
                     <div class="col-12">
                         <label for="observacoes" class="form-label">Observacoes</label>
-                        <textarea rows="4" class="form-control" name="observacoes" id="observacoes" placeholder="Observação..."></textarea>
+                        <textarea rows="4" class="form-control" name="observacoes" id="observacoes" placeholder="Observação..." {{ (Route::currentRouteName() === 'movimentacoes.detalhes') ? 'readonly' : ''}}>{{ $movimentacao->observacao ?? '' }}</textarea>
                     </div>
                 </div>
                 <div class="row mb-4">
                     <div class="col-12">
-                        <button type="submit" class="btn btn-primary">Enviar</button>
+                        @if(Route::currentRouteName() === 'movimentacoes.detalhes')
+                            <a href="{{ Route('movimentacoes.edit', $movimentacao->id) }}" class="btn btn-primary" role="button">Editar</a>
+                        @else
+                            <button type="submit" class="btn btn-primary">Enviar</button>
+                        @endif
                         <a href="{{ Route('movimentacoes.index') }}" class="btn btn-secondary" role="button">Voltar</a>
                     </div>
                 </div>

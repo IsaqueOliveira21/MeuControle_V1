@@ -21,13 +21,17 @@ Route::prefix('meucontrole')->middleware('auth')->group(function () {
         Route::get('', 'index')->name('conta.index');
         Route::get('create', 'create')->name('conta.create');
         Route::post('store', 'store')->name('conta.store');
+        Route::get('edit/{conta}', 'edit')->name('conta.edit');
+        Route::put('update/{conta}', 'update')->name('conta.update');
     });
 
     Route::prefix('movimentacoes')->controller(MovimentacaoController::class)->group(function () {
         Route::get('', 'index')->name('movimentacoes.index');
         Route::get('create', 'create')->name('movimentacoes.create');
-        Route::post('store', 'store')->name('movimentacoes.store');
+        Route::get('edit/{movimentacao}', 'edit')->name('movimentacoes.edit');
         Route::get('detalhes/{movimentacao}', 'detalhes')->name('movimentacoes.detalhes');
+        Route::post('store', 'store')->name('movimentacoes.store');
+        Route::put('update/{movimentacao}', 'update')->name('movimentacoes.update');
     });
 });
 

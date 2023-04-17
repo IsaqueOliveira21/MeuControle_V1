@@ -22,7 +22,11 @@
     <!-- Fonts and Dashmix framework -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" id="css-main" href="{{ asset('assets/css/dashmix.min.css') }}">
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" id="css-main" href="{{asset('assets/css/dashmix.min.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/js/plugins/select2/css/select2.min.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/js/plugins/flatpickr/flatpickr.min.css') }}">
     <!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
     <!-- <link rel="stylesheet" id="css-theme" href="assets/css/themes/xwork.min.css"> -->
     <link rel="stylesheet" id="css-theme" href="{{ asset('assets/css/themes/xdream.min.css') }}">
@@ -342,6 +346,20 @@
   webpack is putting everything together at assets/_js/main/app.js
 -->
 <script src="{{ asset('assets/js/dashmix.app.min.js') }}"></script>
+<script src="{{ asset('assets/js/lib/jquery.min.js') }}"></script>
+<script src="{{ asset('assets/js/plugins/bootstrap-notify/bootstrap-notify.min.js') }}"></script>
+<script src="{{ asset('assets/js/plugins/jquery.maskedinput/jquery.maskedinput.min.js') }}"></script>
+<script src="{{asset('assets/js/plugins/select2/js/select2.full.min.js')}}"></script>
+<script src="{{asset('assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
+<script src="{{ asset('assets/js/plugins/flatpickr/flatpickr.min.js') }}"></script>
+<script>Dashmix.helpersOnLoad(['jq-notify', 'jq-select2', 'jq-datepicker', 'js-flatpickr']);</script>
+<script src="https://code.highcharts.com/highcharts.js"></script> <!-- Highcharts -->
+
+<script>
+    $(document).ready(function () {
+        $("#data").mask("99/99/9999", {placeholder:"0"});
+    });
+</script>
 </body>
 </html>
 

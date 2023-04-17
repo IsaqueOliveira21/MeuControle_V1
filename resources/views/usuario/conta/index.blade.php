@@ -20,7 +20,7 @@
                     <th class="text-center" style="width: 100px;">Saldo</th>
                     <th class="text-center" style="width: 100px;">Fechamento</th>
                     <th class="text-center" style="width: 100px;">Vencimento</th>
-                    <th class="text-center" style="width: 100px;">Limite Total</th>
+                    <th class="text-center" style="width: 100px;">Crédito Disponivel</th>
                     <th class="text-center" style="width: 100px;">Ações</th>
                 </tr>
                 </thead>
@@ -33,15 +33,15 @@
                             </td>
                             <th class="text-center">{{ $conta->tipo }}</th>
                             <th class="text-center">R$ {{ $conta->saldo }}</th>
-                            <th class="text-center">{{ date_format($conta->dia_fechamento, 'd/m') }}</th>
-                            <th class="text-center">{{ date_format($conta->dia_vencimento, 'd/m') }}</th>
+                            <th class="text-center">Dia {{ date_format($conta->dia_fechamento, 'd') }}</th>
+                            <th class="text-center">Dia {{ date_format($conta->dia_vencimento, 'd') }}</th>
                             <th class="text-center">R$ {{ $conta->limite }}</th>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-alt-secondary" data-bs-toggle="tooltip" title="Editar">
+                                    <a href="{{ Route('conta.edit', $conta->id) }}" class="btn btn-sm btn-alt-secondary" data-bs-toggle="tooltip" role="button" title="Editar">
                                         <i class="fa fa-pencil-alt"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-alt-secondary" data-bs-toggle="tooltip" title="Remover">
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-alt-danger" data-bs-toggle="tooltip" title="Remover">
                                         <i class="fa fa-times"></i>
                                     </button>
                                 </div>

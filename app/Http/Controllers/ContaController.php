@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Conta;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PHPUnit\Exception;
 
 class ContaController extends Controller
 {
@@ -33,12 +35,33 @@ class ContaController extends Controller
                 'nome_conta' => $request->nome_conta,
                 'saldo' => $request->saldo,
                 'ativo' => 1,
-                'dia_fechamento' => $request->dia_fechamento,
-                'dia_vencimento' => $request->dia_vencimento,
+                'dia_fechamento' => Carbon::createFromFormat('d/m/Y', $request->dia_fechamento)->format('d-m-Y'),
+                'dia_vencimento' => Carbon::createFromFormat('d/m/Y', $request->dia_vencimento)->format('d-m-Y'),
                 'limite' => $request->limite,
             ]);
             return redirect()->route('conta.index');
         } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+    }
+
+    public function edit(Conta $conta) {
+        return view('usuario.conta.dados', compact('conta'));
+    }
+
+    public function update(Conta $conta, Request $request) {
+        try {
+            $conta->update([
+                'tipo' => $request->tipo_conta,
+                'nome_conta' => $request->nome_conta,
+                'saldo' => $request->saldo,
+                'ativo' => 1,
+                'dia_fechamento' => Carbon::createFromFormat('d/m/Y', $request->dia_fechamento)->format('d-m-Y'),
+                'dia_vencimento' => Carbon::createFromFormat('d/m/Y', $request->dia_vencimento)->format('d-m-Y'),
+                'limite' => $request->limite,
+            ]);
+            return redirect()->back();
+        } catch (Exception $e) {
             dd($e->getMessage());
         }
     }
