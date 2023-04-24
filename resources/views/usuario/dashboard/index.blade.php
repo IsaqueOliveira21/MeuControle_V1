@@ -4,9 +4,16 @@
 
 @section('conteudo')
     <div class="content">
-        <div class="block block-rounded">
-            <div class="block-content block-content-full">
-                <p>OS GRÁFICOS SERÃO MOSTRADOS AQUI!!!</p>
+        <div class="block block-rounded mb-5">
+            <div class="block-content">
+                <div id="graficoGastosGanhos">
+                </div>
+            </div>
+        </div>
+        <div class="block block-rounded mb-5">
+            <div class="block-content">
+                <div id="graficoGastosGanhosColuna">
+                </div>
             </div>
         </div>
     </div>

@@ -41,9 +41,14 @@
                                     <a href="{{ Route('conta.edit', $conta->id) }}" class="btn btn-sm btn-alt-secondary" data-bs-toggle="tooltip" role="button" title="Editar">
                                         <i class="fa fa-pencil-alt"></i>
                                     </a>
-                                    <button type="button" class="btn btn-sm btn-alt-danger" data-bs-toggle="tooltip" title="Remover">
+                                    <a href="#"
+                                       class="btn btn-sm btn-alt-danger"
+                                       data-bs-toggle="modal" data-bs-target="#modalDelete" data-id="{{$conta->id}}"
+                                       data-item="{{ "Deseja remover <b>$conta->nome_conta</b> de suas contas?" }}"
+                                       data-url="conta/delete"
+                                       title="Excluir">
                                         <i class="fa fa-times"></i>
-                                    </button>
+                                    </a>
                                 </div>
                             </td>
                         </tr>

@@ -103,11 +103,6 @@
                                     <span class="nav-main-link-name">Ver</span>
                                 </a>
                             </li>
-                            <li class="nav-main-item">
-                                <a class="nav-main-link" href="#">
-                                    <span class="nav-main-link-name">Gerenciar</span>
-                                </a>
-                            </li>
                         </ul>
                     </li>
                     <li class="nav-main-item">
@@ -122,52 +117,9 @@
                                 </a>
                             </li>
                             <li class="nav-main-item">
-                                <a class="nav-main-link" href="#">
+                                <a class="nav-main-link" href="{{ Route('movimentacoes.recorrentes') }}">
                                     <span class="nav-main-link-name">Recorrentes</span>
-                                    <span class="nav-main-link-badge badge rounded-pill bg-primary">2</span>
-                                </a>
-                            </li>
-                            <li class="nav-main-item">
-                                <a class="nav-main-link" href="#">
-                                    <span class="nav-main-link-name">Assinaturas</span>
-                                    <span class="nav-main-link-badge badge rounded-pill bg-primary">2</span>
-                                </a>
-                            </li>
-                            <li class="nav-main-item">
-                                <a class="nav-main-link" href="#">
-                                    <i class="nav-main-link-icon fa fa-plus-circle"></i>
-                                    <span class="nav-main-link-name">Nova</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-main-item">
-                        <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
-                            <i class="nav-main-link-icon fa fa-money-check"></i>
-                            <span class="nav-main-link-name">Cartões</span>
-                        </a>
-                        <ul class="nav-main-submenu">
-                            <li class="nav-main-item">
-                                <a class="nav-main-link" href="#">
-                                    <span class="nav-main-link-name">Ativos</span>
-                                    <span class="nav-main-link-badge badge rounded-pill bg-success">3</span>
-                                </a>
-                            </li>
-                            <li class="nav-main-item">
-                                <a class="nav-main-link" href="#">
-                                    <span class="nav-main-link-name">Inativos</span>
-                                    <span class="nav-main-link-badge badge rounded-pill bg-warning">1</span>
-                                </a>
-                            </li>
-                            <li class="nav-main-item">
-                                <a class="nav-main-link" href="#">
-                                    <span class="nav-main-link-name">Compartilhamento</span>
-                                </a>
-                            </li>
-                            <li class="nav-main-item">
-                                <a class="nav-main-link" href="">
-                                    <i class="nav-main-link-icon fa fa-plus-circle"></i>
-                                    <span class="nav-main-link-name">Adicionar</span>
+                                    <span class="nav-main-link-badge badge rounded-pill bg-primary">{{ \App\Models\Movimentacao::where('user_id',\Illuminate\Support\Facades\Auth::user()->id)->where('recorrencia', '<>', 'NAO RECORRENTE')->count() }}</span>
                                 </a>
                             </li>
                         </ul>
@@ -339,6 +291,34 @@
 </div>
 <!-- END Page Container -->
 
+<!-- MODAL DELETE -->
+
+<div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="modal-block-slideleft" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-slideleft" role="document">
+        <div class="modal-content">
+            <div class="block block-rounded block-themed block-transparent mb-0">
+                <div class="block-header bg-danger">
+                    <h3 class="block-title">Excluir</h3>
+                    <div class="block-options">
+                        <button type="button" class="btn-block-option" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa fa-fw fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="block-content">
+                    <p id="nomeConta"></p>
+                </div>
+                <div class="block-content block-content-full text-end bg-body">
+                    <button type="button" class="btn btn-sm btn-alt-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a href="#" id="btnModalDelete" class="btn btn-sm btn-danger">Sim</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- END MODAL DELETE -->
+
 <!--
   Dashmix JS
 
@@ -353,13 +333,27 @@
 <script src="{{asset('assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
 <script src="{{ asset('assets/js/plugins/flatpickr/flatpickr.min.js') }}"></script>
 <script>Dashmix.helpersOnLoad(['jq-notify', 'jq-select2', 'jq-datepicker', 'js-flatpickr']);</script>
-<script src="https://code.highcharts.com/highcharts.js"></script> <!-- Highcharts -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
 
 <script>
     $(document).ready(function () {
         $("#data").mask("99/99/9999", {placeholder:"0"});
+        $('#modalDelete').on('show.bs.modal', function (event) {
+            let params = $(event.relatedTarget)
+            let id = params.data('id')
+            let item = params.data('item')
+            let url = params.data('url')
+            let modal = $(this)
+            modal.find('#nomeConta').html(item);
+            modal.find('#btnModalDelete').attr('href', url + '?id=' + id);
+        })
     });
 </script>
+
+@if(Route::currentRouteName() === 'user.dashboard')
+    @include('usuario.dashboard.graficos.gastosGanhos')
+    @include('usuario.dashboard.graficos.gastosGanhosColuna')
+@endif
 </body>
 </html>
 

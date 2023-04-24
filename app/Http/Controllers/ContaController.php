@@ -65,4 +65,9 @@ class ContaController extends Controller
             dd($e->getMessage());
         }
     }
+
+    public function delete(Request $request) {
+        $this->conta->find($request->id)->delete();
+        return redirect()->route('conta.index');
+    }
 }

@@ -23,6 +23,13 @@ class MovimentacaoController extends Controller
         return view('usuario.movimentacao.index', compact('movimentacoes'));
     }
 
+    public function pagamentosRecorrentes() {
+        $movimentacoes = $this->movimentacao->where('user_id', Auth::user()->id)
+            ->where('recorrencia', '<>', 'NAO RECORRENTE')
+            ->get();
+        return view('usuario.movimentacao.recorrentes', compact('movimentacoes'));
+    }
+
     public function create() {
         $contas = Conta::where('user_id', Auth::user()->id)->get();
         return view('usuario.movimentacao.dados', compact('contas'));
@@ -42,6 +49,16 @@ class MovimentacaoController extends Controller
                 'recorrencia' => $request->recorrencia,
                 'observacao' => $request->observacoes,
             ]);
+            $conta = Conta::find($request->conta_id);
+            if($request->tipo == 'SAIDA') {
+                $conta->update([
+                    'saldo' => ($conta->saldo - $request->valor_total),
+                ]);
+            } else {
+                $conta->update([
+                    'saldo' => ($conta->saldo + $request->valor_total),
+                ]);
+            }
             return redirect()->route('movimentacoes.index');
         } catch (\Exception $e) {
             dd($e->getMessage(), $e->getLine());

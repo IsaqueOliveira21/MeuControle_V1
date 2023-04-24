@@ -20,8 +20,9 @@ Route::prefix('meucontrole')->middleware('auth')->group(function () {
     Route::prefix('conta')->controller(ContaController::class)->group(function () {
         Route::get('', 'index')->name('conta.index');
         Route::get('create', 'create')->name('conta.create');
-        Route::post('store', 'store')->name('conta.store');
         Route::get('edit/{conta}', 'edit')->name('conta.edit');
+        Route::get('delete', 'delete')->name('conta.delete');
+        Route::post('store', 'store')->name('conta.store');
         Route::put('update/{conta}', 'update')->name('conta.update');
     });
 
@@ -30,6 +31,7 @@ Route::prefix('meucontrole')->middleware('auth')->group(function () {
         Route::get('create', 'create')->name('movimentacoes.create');
         Route::get('edit/{movimentacao}', 'edit')->name('movimentacoes.edit');
         Route::get('detalhes/{movimentacao}', 'detalhes')->name('movimentacoes.detalhes');
+        Route::get('recorrentes', 'pagamentosRecorrentes')->name('movimentacoes.recorrentes');
         Route::post('store', 'store')->name('movimentacoes.store');
         Route::put('update/{movimentacao}', 'update')->name('movimentacoes.update');
     });
