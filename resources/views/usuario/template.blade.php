@@ -30,9 +30,12 @@
     <!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
     <!-- <link rel="stylesheet" id="css-theme" href="assets/css/themes/xwork.min.css"> -->
     <link rel="stylesheet" id="css-theme" href="{{ asset('assets/css/themes/xdream.min.css') }}">
+
+
     <!-- END Stylesheets -->
 </head>
 <body>
+<div id="page-loader" class="show bg-xsmooth"></div>
 <div id="page-container" class="sidebar-o side-scroll page-header-fixed page-header-dark main-content-boxed">
     <nav id="sidebar" aria-label="Main Navigation">
         <!-- Side Header (mini Sidebar mode) -->
@@ -76,7 +79,7 @@
             <!-- Side Actions -->
             <div class="content-side content-side-full text-center bg-body-light">
                 <div class="smini-hide">
-                    <img class="img-avatar" src="{{ asset('assets/media/avatars/avatar10.jpg') }}" alt="">
+                    <img class="img-avatar" src="{{ !isset(\Illuminate\Support\Facades\Auth::user()->photo) ? asset('assets/media/avatars/avatar10.jpg') : asset('/storage/fotos/'.\Illuminate\Support\Facades\Auth::user()->photo) }}" alt="">
                     <div class="mt-3 fw-semibold">{{ \Illuminate\Support\Facades\Auth::user()->name }}</div>
                 </div>
             </div>
@@ -126,16 +129,9 @@
                     </li>
                     <li class="nav-main-heading">SOCIAL</li>
                     <li class="nav-main-item">
-                        <a class="nav-main-link" href="#">
+                        <a class="nav-main-link" href="{{ Route('amigos.index') }}">
                             <i class="nav-main-link-icon fa fa-user-circle"></i>
                             <span class="nav-main-link-name">Amigos</span>
-                        </a>
-                    </li>
-                    <li class="nav-main-item">
-                        <a class="nav-main-link" href="#">
-                            <i class="nav-main-link-icon fa fa-envelope"></i>
-                            <span class="nav-main-link-name">Mensagens</span>
-                            <span class="nav-main-link-badge badge rounded-pill bg-success">3</span>
                         </a>
                     </li>
                 </ul>
@@ -164,7 +160,7 @@
 
             <!-- Right Section -->
             <div>
-                <!-- Notifications Dropdown -->
+                <!-- Notifications Dropdown
                 <div class="dropdown d-inline-block">
                     <button type="button" class="btn btn-alt-secondary" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="far fa-fw fa-flag"></i>
@@ -216,7 +212,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- END Notifications Dropdown -->
+                 END Notifications Dropdown -->
 
                 <!-- User Dropdown -->
                 <div class="dropdown d-inline-block">
@@ -226,13 +222,13 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-end p-0" aria-labelledby="page-header-user-dropdown">
                         <div class="bg-primary-dark rounded-top fw-semibold text-white text-center p-3">
-                            <img class="img-avatar img-avatar48 img-avatar-thumb" src="{{ asset('assets/media/avatars/avatar10.jpg') }}" alt="">
+                            <img class="img-avatar img-avatar48 img-avatar-thumb" src="{{ !isset(\Illuminate\Support\Facades\Auth::user()->photo) ? asset('assets/media/avatars/avatar10.jpg') : asset('/storage/fotos/'.\Illuminate\Support\Facades\Auth::user()->photo) }}" alt="">
                             <div class="pt-2">
                                 <a class="text-white fw-semibold" href="#">{{ \Illuminate\Support\Facades\Auth::user()->name }}</a>
                             </div>
                         </div>
                         <div class="p-2">
-                            <a class="dropdown-item" href="javascript:void(0)">
+                            <a class="dropdown-item" href="{{ Route('user.perfil') }}">
                                 <i class="fa fa-fw fa-cog me-1"></i> Configurações
                             </a>
                             <div role="separator" class="dropdown-divider"></div>
@@ -338,6 +334,7 @@
 <script>
     $(document).ready(function () {
         $("#data").mask("99/99/9999", {placeholder:"0"});
+        $("#telefone").mask("(99) 99999-9999", {placeholder:"0"});
         $('#modalDelete').on('show.bs.modal', function (event) {
             let params = $(event.relatedTarget)
             let id = params.data('id')
@@ -346,6 +343,15 @@
             let modal = $(this)
             modal.find('#nomeConta').html(item);
             modal.find('#btnModalDelete').attr('href', url + '?id=' + id);
+        });
+        $('#modalDetalheAmigo').on('show.bs.modal', function (event) {
+            let params = $(event.relatedTarget)
+            let id = params.data('id')
+            let item = params.data('item')
+            let url = params.data('url')
+            let modal = $(this)
+            modal.find('#detalheAmigo').html(item);
+            modal.find('#btnModalEdit').attr('href', url + '?id=' + id);
         })
     });
 </script>

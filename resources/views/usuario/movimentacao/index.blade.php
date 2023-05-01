@@ -18,6 +18,7 @@
                     <th class="text-center">Conta</th>
                     <th class="text-center">Data</th>
                     <th class="text-center">Tipo</th>
+                    <th class="text-center">Autor</th>
                     <th class="text-center">Pagamento</th>
                     <th class="text-center">Valor</th>
                     <th class="text-center">Detalhes</th>
@@ -32,8 +33,9 @@
                         <th class="d-none d-sm-table-cell text-center">
                             <span class="badge bg-{{ $movimentacao->tipo === 'ENTRADA' ? 'success' : 'danger' }}">{{ $movimentacao->tipo }}</span>
                         </th>
+                        <th class="text-center">{{ !is_null($movimentacao->amigo_id) ? $movimentacao->amigo->nome : 'Você' }}</th>
                         <th class="text-center">{{ $movimentacao->forma_pagamento }}</th>
-                        <th class="text-center">R$ {{ $movimentacao->valor_total }}</th>
+                        <th class="text-center {{ $movimentacao->tipo === 'ENTRADA' ? 'text-success' : 'text-danger' }}">R$ {{ $movimentacao->valor_total }}</th>
                         <td class="text-center pt-4">
                             <a href="{{ Route('movimentacoes.detalhes', $movimentacao->id) }}" class="btn btn-alt-warning" role="button">
                                 <i class="fa fa-clipboard"></i>
@@ -46,6 +48,11 @@
                     </tr>
                 @endforelse
                 </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="5">{{ $movimentacoes->appends($_GET)->links() }}</td>
+                </tr>
+                </tfoot>
             </table>
         </div>
     </div>

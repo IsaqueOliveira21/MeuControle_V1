@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Amigo;
 use App\Models\Conta;
 use App\Models\Movimentacao;
 use Carbon\Carbon;
@@ -19,7 +20,7 @@ class MovimentacaoController extends Controller
     }
 
     public function index() {
-        $movimentacoes = $this->movimentacao->where('user_id', Auth::user()->id)->get();
+        $movimentacoes = $this->movimentacao->where('user_id', Auth::user()->id)->paginate(10);
         return view('usuario.movimentacao.index', compact('movimentacoes'));
     }
 
@@ -32,14 +33,21 @@ class MovimentacaoController extends Controller
 
     public function create() {
         $contas = Conta::where('user_id', Auth::user()->id)->get();
-        return view('usuario.movimentacao.dados', compact('contas'));
+        $amigos = Amigo::where('user_id', Auth::user()->id)->get();
+        return view('usuario.movimentacao.dados', compact('contas', 'amigos'));
     }
 
     public function store(Request $request) {
+        if($request->amigo === '1'){
+            $amigoId = $request->listaAmigos;
+        } else {
+            $amigoId = null;
+        }
         try {
             $this->movimentacao->create([
                 'user_id' => Auth::user()->id,
                 'conta_id' => $request->conta_id,
+                'amigo_id' => $amigoId,
                 'data' => $request->data,
                 'tipo' => $request->tipo_movimentacao,
                 'forma_pagamento' => $request->forma_pagamento,
@@ -67,7 +75,8 @@ class MovimentacaoController extends Controller
 
     public function edit(Movimentacao $movimentacao) {
         $contas = Conta::where('user_id', Auth::user()->id)->get();
-        return view('usuario.movimentacao.dados', compact('movimentacao', 'contas'));
+        $amigos = Amigo::where('user_id', Auth::user()->id)->get();
+        return view('usuario.movimentacao.dados', compact('movimentacao', 'contas','amigos'));
     }
 
     public function update(Movimentacao $movimentacao, Request $request) {
@@ -91,6 +100,7 @@ class MovimentacaoController extends Controller
 
     public function detalhes(Movimentacao $movimentacao) {
         $contas = Conta::where('user_id', Auth::user()->id)->get();
-        return view('usuario.movimentacao.dados', compact('movimentacao', 'contas'));
+        $amigos = Amigo::where('user_id', Auth::user()->id)->get();
+        return view('usuario.movimentacao.dados', compact(['movimentacao','contas','amigos']));
     }
 }

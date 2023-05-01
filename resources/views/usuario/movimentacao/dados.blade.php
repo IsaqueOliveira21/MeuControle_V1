@@ -76,6 +76,26 @@
                 </div>
                 <div class="row mb-4">
                     <div class="col-12">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" value="1" id="amigo" name="amigo" {{ isset($movimentacao->amigo_id) ? 'checked' : '' }} {{ (Route::currentRouteName() === 'movimentacoes.detalhes') ? 'disabled' : ''}}>
+                            <label class="form-check-label" for="amigo">Compra feita por um amigo?</label>
+                        </div>
+                        <div id="lista-amigo" class="mt-4" style="display:none;">
+                            <div class="col-12">
+                                <div class="mb-4">
+                                    <select class="js-select2 form-select" id="listaAmigos" name="listaAmigos" style="width: 100%;" data-placeholder="Seus Amigos" {{ (Route::currentRouteName() === 'movimentacoes.detalhes') ? 'disabled' : ''}}>
+                                        <option value=""></option>
+                                        @foreach($amigos as $amigo)
+                                            <option value="{{ $amigo->id }}" {{ (isset($movimentacao->amigo_id) && $movimentacao->amigo_id === $amigo->id) ? 'selected' : '' }}>{{ $amigo->nome }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-12">
                         <label for="observacoes" class="form-label">Observacoes</label>
                         <textarea rows="4" class="form-control" name="observacoes" id="observacoes" placeholder="Observação..." {{ (Route::currentRouteName() === 'movimentacoes.detalhes') ? 'readonly' : ''}}>{{ $movimentacao->observacao ?? '' }}</textarea>
                     </div>
@@ -93,4 +113,23 @@
             </form>
         </div>
     </div>
+
+    <script>
+        let radio = document.getElementById("amigo");
+        let div = document.getElementById("lista-amigo");
+
+        radio.addEventListener("change", function() {
+            if (radio.checked) {
+                div.style.display = "block";
+            } else {
+                div.style.display = "none";
+            }
+        });
+
+        if (radio.checked) {
+            div.style.display = "block";
+        } else {
+            div.style.display = "none";
+        }
+    </script>
 @endsection
