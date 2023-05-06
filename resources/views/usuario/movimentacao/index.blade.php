@@ -37,7 +37,7 @@
                         <th class="text-center">{{ $movimentacao->forma_pagamento }}</th>
                         <th class="text-center {{ $movimentacao->tipo === 'ENTRADA' ? 'text-success' : 'text-danger' }}">R$ {{ $movimentacao->valor_total }}</th>
                         <td class="text-center pt-4">
-                            <a href="{{ Route('movimentacoes.detalhes', $movimentacao->id) }}" class="btn btn-alt-warning" role="button">
+                            <a href="{{ Route('movimentacoes.detalhes', $movimentacao->id) }}" class="btn btn-alt-primary" role="button">
                                 <i class="fa fa-clipboard"></i>
                             </a>
                         </td>

@@ -125,6 +125,12 @@
                                     <span class="nav-main-link-badge badge rounded-pill bg-primary">{{ \App\Models\Movimentacao::where('user_id',\Illuminate\Support\Facades\Auth::user()->id)->where('recorrencia', '<>', 'NAO RECORRENTE')->count() }}</span>
                                 </a>
                             </li>
+                            <li class="nav-main-item">
+                                <a class="nav-main-link" href="{{ Route('movimentacoes.parceladas') }}">
+                                    <span class="nav-main-link-name">Parceladas</span>
+                                    <span class="nav-main-link-badge badge rounded-pill bg-warning">{{ \App\Models\Movimentacao::where('user_id',\Illuminate\Support\Facades\Auth::user()->id)->where('forma_pagamento', '=', 'CREDITO')->whereNotNull('parcelado')->count() }}</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li class="nav-main-heading">SOCIAL</li>

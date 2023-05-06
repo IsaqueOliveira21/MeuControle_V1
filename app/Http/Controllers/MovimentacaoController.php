@@ -8,6 +8,7 @@ use App\Models\Movimentacao;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Exception;
 
 class MovimentacaoController extends Controller
@@ -20,7 +21,7 @@ class MovimentacaoController extends Controller
     }
 
     public function index() {
-        $movimentacoes = $this->movimentacao->where('user_id', Auth::user()->id)->paginate(10);
+        $movimentacoes = $this->movimentacao->where('user_id', Auth::user()->id)->orderBy('data', 'DESC')->paginate(10);
         return view('usuario.movimentacao.index', compact('movimentacoes'));
     }
 
@@ -29,6 +30,46 @@ class MovimentacaoController extends Controller
             ->where('recorrencia', '<>', 'NAO RECORRENTE')
             ->get();
         return view('usuario.movimentacao.recorrentes', compact('movimentacoes'));
+    }
+
+    public function parceladas()
+    {
+        $movimentacoes = DB::table('movimentacoes_financeiras')
+            ->join('contas', 'movimentacoes_financeiras.conta_id', '=', 'contas.id')
+            ->leftJoin('amigos', 'movimentacoes_financeiras.amigo_id', '=', 'amigos.id')
+            ->selectRaw('movimentacoes_financeiras.id, descricao, contas.nome_conta, amigos.nome as amigo, movimentacoes_financeiras.tipo, data AS vencimento, valor_total, parcelado,(valor_total/parcelado) AS valor_parcela')
+            ->where('movimentacoes_financeiras.user_id', Auth::user()->id)
+            ->where('forma_pagamento', 'CREDITO')
+            ->whereNotNull('parcelado')
+            ->groupBy('amigos.nome', 'movimentacoes_financeiras.id', 'descricao', 'vencimento', 'tipo', 'contas.nome_conta', 'valor_total', 'parcelado')
+            ->orderBy('vencimento')
+            ->get();
+        $datas = [];
+        foreach ($movimentacoes as $linha) {
+            for($i = 0; $i < $linha->parcelado; $i++) {
+                 $mesAno = Carbon::parse($linha->vencimento)->addMonth($i)->format('Y-m-d');
+                 if(!in_array($mesAno, $datas)) {
+                     $datas[] = $mesAno;
+                 }
+            }
+        }
+        $valores = [];
+        foreach($movimentacoes as $linha) {
+            foreach($datas as $data) {
+                $valores[$data][$linha->descricao] = 0;
+            }
+        }
+        foreach($movimentacoes as $linha) {
+            for($i = 0; $i < $linha->parcelado; $i++) {
+                $mesAno = Carbon::parse($linha->vencimento)->addMonth($i)->format('Y-m-d');
+                foreach($datas as $data){
+                    if($data == $mesAno){
+                        $valores[$data][$linha->descricao] = $linha->valor_parcela;
+                    }
+                }
+            }
+        }
+        return view('usuario.movimentacao.parceladas', compact(['datas', 'valores','movimentacoes']));
     }
 
     public function create() {

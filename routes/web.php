@@ -33,6 +33,7 @@ Route::prefix('meucontrole')->middleware('auth')->group(function () {
         Route::get('edit/{movimentacao}', 'edit')->name('movimentacoes.edit');
         Route::get('detalhes/{movimentacao}', 'detalhes')->name('movimentacoes.detalhes');
         Route::get('recorrentes', 'pagamentosRecorrentes')->name('movimentacoes.recorrentes');
+        Route::get('parceladas', 'parceladas')->name('movimentacoes.parceladas');
         Route::post('store', 'store')->name('movimentacoes.store');
         Route::put('update/{movimentacao}', 'update')->name('movimentacoes.update');
     });
