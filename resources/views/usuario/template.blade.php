@@ -127,8 +127,7 @@
                             </li>
                             <li class="nav-main-item">
                                 <a class="nav-main-link" href="{{ Route('movimentacoes.parceladas') }}">
-                                    <span class="nav-main-link-name">Parceladas</span>
-                                    <span class="nav-main-link-badge badge rounded-pill bg-warning">{{ \App\Models\Movimentacao::where('user_id',\Illuminate\Support\Facades\Auth::user()->id)->where('forma_pagamento', '=', 'CREDITO')->whereNotNull('parcelado')->count() }}</span>
+                                    <span class="nav-main-link-name">Resumo Geral</span>
                                 </a>
                             </li>
                         </ul>

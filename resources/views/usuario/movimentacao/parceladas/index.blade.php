@@ -1,6 +1,6 @@
 @extends('usuario.template')
 
-@section('titulo', 'MOVIMENTAÇÕES PARCELADAS')
+@section('titulo', 'MOVIMENTAÇÕES - CARTÃO')
 
 @section('conteudo')
     <div class="block block-rounded">
@@ -25,7 +25,7 @@
                 <tbody>
                 @foreach($movimentacoes as $movimentacao)
                     <tr>
-                        <td class="text-center"><b>{{ $movimentacao->descricao }}</b></td>
+                        <td class="text-center"><a href="{{ Route('movimentacoes.detalhes', $movimentacao->id) }}" class="text-primary"><b>{{ $movimentacao->descricao }}</b></a></td>
                         <td class="text-center">{{ $movimentacao->nome_conta }}</td>
                         <td class="text-center text-{{ !is_null($movimentacao->amigo) ? 'primary' : 'secondary' }}"><b>{{ !is_null($movimentacao->amigo) ? $movimentacao->amigo : 'Você' }}</b></td>
                         <td class="text-center">{{ \Carbon\Carbon::parse($movimentacao->vencimento)->format('d/m/Y') }}</td>
@@ -33,7 +33,7 @@
                             <span class="badge bg-{{$movimentacao->tipo === 'ENTRADA' ? 'success' : 'danger'}}">{{ $movimentacao->tipo }}</span>
                         </td>
                         @foreach($valores as $valor)
-                            <td class="text-center text-{{$movimentacao->tipo === 'ENTRADA' ? 'success' : 'danger'}}"><b>R$ {{ $valor[$movimentacao->descricao] }}</b></td>
+                            <td class="text-center text-{{$movimentacao->tipo === 'ENTRADA' ? 'success' : 'danger'}}"><b>R$ {{ number_format($valor[$movimentacao->descricao], 2, ',') }}</b></td>
                         @endforeach
                     </tr>
                 @endforeach

@@ -37,20 +37,31 @@ class MovimentacaoController extends Controller
         $movimentacoes = DB::table('movimentacoes_financeiras')
             ->join('contas', 'movimentacoes_financeiras.conta_id', '=', 'contas.id')
             ->leftJoin('amigos', 'movimentacoes_financeiras.amigo_id', '=', 'amigos.id')
-            ->selectRaw('movimentacoes_financeiras.id, descricao, contas.nome_conta, amigos.nome as amigo, movimentacoes_financeiras.tipo, data AS vencimento, valor_total, parcelado,(valor_total/parcelado) AS valor_parcela')
+            ->selectRaw('movimentacoes_financeiras.id, descricao, contas.nome_conta, amigos.nome as amigo, movimentacoes_financeiras.tipo, data AS vencimento, valor_total, parcelado, IF(parcelado LIKE 0,  valor_total, valor_total/parcelado) AS valor_parcela')
             ->where('movimentacoes_financeiras.user_id', Auth::user()->id)
-            ->where('forma_pagamento', 'CREDITO')
+            //->where('forma_pagamento', 'CREDITO')
+            //->orWhere('forma_pagamento', 'DEBITO')
             ->whereNotNull('parcelado')
-            ->groupBy('amigos.nome', 'movimentacoes_financeiras.id', 'descricao', 'vencimento', 'tipo', 'contas.nome_conta', 'valor_total', 'parcelado')
+            ->groupBy('vencimento', 'amigos.nome', 'movimentacoes_financeiras.id', 'descricao', 'tipo', 'contas.nome_conta', 'valor_total', 'parcelado')
             ->orderBy('vencimento')
             ->get();
+
         $datas = [];
         foreach ($movimentacoes as $linha) {
-            for($i = 0; $i < $linha->parcelado; $i++) {
-                 $mesAno = Carbon::parse($linha->vencimento)->addMonth($i)->format('Y-m-d');
-                 if(!in_array($mesAno, $datas)) {
-                     $datas[] = $mesAno;
-                 }
+            if($linha->parcelado == 0) {
+                for($i = 0; $i < 1; $i++) {
+                    $mesAno = Carbon::parse($linha->vencimento)->addMonth($i)->format('Y-m');
+                    if(!in_array($mesAno, $datas)) {
+                        $datas[] = $mesAno;
+                    }
+                }
+            } else {
+                for($i = 0; $i < $linha->parcelado; $i++) {
+                    $mesAno = Carbon::parse($linha->vencimento)->addMonth($i)->format('Y-m');
+                    if(!in_array($mesAno, $datas)) {
+                        $datas[] = $mesAno;
+                    }
+                }
             }
         }
         $valores = [];
@@ -60,16 +71,31 @@ class MovimentacaoController extends Controller
             }
         }
         foreach($movimentacoes as $linha) {
-            for($i = 0; $i < $linha->parcelado; $i++) {
-                $mesAno = Carbon::parse($linha->vencimento)->addMonth($i)->format('Y-m-d');
-                foreach($datas as $data){
-                    if($data == $mesAno){
-                        $valores[$data][$linha->descricao] = $linha->valor_parcela;
+            if($linha->parcelado == 0) {
+                for($i = 0; $i < 1; $i++) {
+                    $mesAno = Carbon::parse($linha->vencimento)->addMonth($i)->format('Y-m');
+                    foreach($datas as $data){
+                        if($data == $mesAno){
+                            $valores[$data][$linha->descricao] = $linha->valor_parcela;
+                        }
+                    }
+                }
+            } else {
+                for($i = 0; $i < $linha->parcelado; $i++) {
+                    $mesAno = Carbon::parse($linha->vencimento)->addMonth($i)->format('Y-m');
+                    foreach($datas as $data){
+                        if($data == $mesAno){
+                            $valores[$data][$linha->descricao] = $linha->valor_parcela;
+                        }
                     }
                 }
             }
         }
-        return view('usuario.movimentacao.parceladas', compact(['datas', 'valores','movimentacoes']));
+        return view('usuario.movimentacao.parceladas.index', compact(['datas', 'valores','movimentacoes']));
+    }
+
+    public function parceladasDetalhe(Movimentacao $movimentacao) {
+
     }
 
     public function create() {
